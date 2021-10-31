@@ -31,7 +31,6 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const service = await servicesCollection.findOne(query);
-            console.log('yeah unique id', id)
             res.json(service);
         });
 
