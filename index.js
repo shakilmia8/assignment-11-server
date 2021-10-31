@@ -38,9 +38,27 @@ async function run() {
         // post api
         app.post('/services', async (req, res) => {
             const newService = req.body;
-            const result = await servicesCollection.insertOne(newService);
-            res.json(result);
+            const service = await servicesCollection.insertOne(newService);
+            res.json(service);
         });
+
+        // Update Api
+        app.put('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedService = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    name: updatedService.name,
+                    country: updatedService.country,
+                    img: updatedService.img,
+                    describe: updatedService.describe
+                },
+            };
+            const result = await servicesCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        })
 
         // Delete API
         app.delete('/services:id', async (req, res) => {
