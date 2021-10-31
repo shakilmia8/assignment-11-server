@@ -1,6 +1,7 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const cors = require('cors');
+const ObjectId = require('mongodb').ObjectId;
 const app = express();
 const port = process.env.PORT || 9000;
 require('dotenv').config();
@@ -23,7 +24,7 @@ async function run() {
             const cursor = servicesCollection.find({});
             const services = await cursor.toArray();
             res.send(services);
-        })
+        });
 
         // get single API
         app.get('/services/:id', async (req, res) => {
@@ -32,17 +33,22 @@ async function run() {
             const service = await servicesCollection.findOne(query);
             console.log('yeah unique id', id)
             res.json(service);
-        })
+        });
 
         // post api
         app.post('/services', async (req, res) => {
             const newService = req.body;
             const result = await servicesCollection.insertOne(newService);
             res.json(result);
-        })
+        });
 
         // Delete API
-
+        app.delete('/services:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await servicesCollection.deleteOne(query);
+            res.json(result);
+        })
     }
     finally {
         // await client.close();
