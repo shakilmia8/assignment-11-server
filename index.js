@@ -40,6 +40,9 @@ async function run() {
             const result = await servicesCollection.insertOne(newService);
             res.json(result);
         })
+
+        // Delete API
+
     }
     finally {
         // await client.close();
