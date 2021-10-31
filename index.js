@@ -18,6 +18,7 @@ async function run() {
         await client.connect();
         const database = client.db("TravelTrip");
         const servicesCollection = database.collection("services");
+        const ordersCollection = database.collection('orders');
 
         // get API
         app.get('/services', async (req, res) => {
@@ -40,6 +41,13 @@ async function run() {
             const service = await servicesCollection.insertOne(newService);
             res.json(service);
         });
+
+        // Add Orders Api
+        app.post('/orders', async (req, res) => {
+            const order = req.body;
+            const result = await ordersCollection.insertOne(order);
+            res.json(result);
+        })
 
         // Update Api
         app.put('/services/:id', async (req, res) => {
